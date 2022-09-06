@@ -1,30 +1,28 @@
 package cinema.service.impl;
 
-import java.util.List;
-
 import cinema.dao.CinemaHallDao;
-import cinema.lib.Inject;
-import cinema.lib.Service;
 import cinema.model.CinemaHall;
 import cinema.service.CinemaHallService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.util.List;
+import org.springframework.stereotype.Service;
 
 @Service
 public class CinemaHallServiceImpl implements CinemaHallService {
-    private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
-    @Inject
-    private CinemaHallDao cinemaHallDao;
+    private final CinemaHallDao cinemaHallDao;
+
+    public CinemaHallServiceImpl(CinemaHallDao cinemaHallDao) {
+        this.cinemaHallDao = cinemaHallDao;
+    }
 
     @Override
     public CinemaHall add(CinemaHall cinemaHall) {
-        logger.info("Cinema hall by id {} was added to DB", cinemaHall.getId());
         return cinemaHallDao.add(cinemaHall);
     }
 
     @Override
     public CinemaHall get(Long id) {
-        return cinemaHallDao.get(id).get();
+        return cinemaHallDao.get(id).orElseThrow(
+                () -> new RuntimeException("Can't get cinema hall by id " + id));
     }
 
     @Override
