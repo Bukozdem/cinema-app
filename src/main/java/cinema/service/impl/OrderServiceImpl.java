@@ -8,10 +8,14 @@ import cinema.service.OrderService;
 import cinema.service.ShoppingCartService;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 @Service
 public class OrderServiceImpl implements OrderService {
+    private static final Logger logger =
+            LogManager.getLogger(OrderServiceImpl.class);
     private final OrderDao orderDao;
     private final ShoppingCartService shoppingCartService;
 
@@ -22,6 +26,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order completeOrder(ShoppingCart shoppingCart) {
+        logger.info("Method completeOrder was called. Params: shoppingCart = {}",
+                shoppingCart.getId());
         Order order = new Order();
         order.setOrderTime(LocalDateTime.now());
         order.setTickets(shoppingCart.getTickets());
@@ -33,6 +39,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> getOrdersHistory(User user) {
+        logger.debug("Method getOrdersHistory was called. Params: email = {}",
+                user.getEmail());
         return orderDao.getOrdersHistory(user);
     }
 }
